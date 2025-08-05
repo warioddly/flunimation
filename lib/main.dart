@@ -1,6 +1,7 @@
 import 'package:flunimation/curves.dart' show allCurves, MyCurve;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 void main() {
   runApp(const MyApp());
@@ -72,6 +73,12 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Curves'),
+        leading: IconButton(
+          icon: const Icon(Icons.code),
+          onPressed: () {
+            launchUrlString('https://github.com/warioddly/flunimation');
+          },
+        ),
         actions: [
           IconButton(
             tooltip: 'Copy current curve',
@@ -147,20 +154,16 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     Expanded(
                       child: Row(
                         children: [
-                          Expanded(
-                            child: Center(
-                              child: Opacity(
-                                opacity: curvedAnimation.value.clamp(0, 1),
-                                child: _container(Colors.orange),
-                              ),
+                          _expand(
+                            child: Opacity(
+                              opacity: curvedAnimation.value.clamp(0, 1),
+                              child: _container(Colors.blue),
                             ),
                           ),
-                          Expanded(
-                            child: Center(
-                              child: Transform.scale(
-                                scale: curvedAnimation.value + 0.5,
-                                child: _container(Colors.green),
-                              ),
+                          _expand(
+                            child: Transform.scale(
+                              scale: curvedAnimation.value + 0.5,
+                              child: _container(Colors.green),
                             ),
                           ),
                         ],
@@ -169,23 +172,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     Expanded(
                       child: Row(
                         children: [
-                          Expanded(
-                            child: Center(
-                              child: Transform.rotate(
-                                angle: curvedAnimation.value * 6.28,
-                                child: _container(Colors.red),
-                              ),
+                          _expand(
+                            child: Transform.rotate(
+                              angle: curvedAnimation.value * 6.28,
+                              child: _container(Colors.red),
                             ),
                           ),
-                          Expanded(
-                            child: Center(
-                              child: Align(
-                                alignment: Alignment(
-                                  2 * curvedAnimation.value - 1,
-                                  0,
-                                ),
-                                child: _container(Colors.purple),
+                          _expand(
+                            child: Align(
+                              alignment: Alignment(
+                                2 * curvedAnimation.value - 1,
+                                0,
                               ),
+                              child: _container(Colors.purple),
                             ),
                           ),
                         ],
@@ -203,6 +202,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   Widget _container(Color color) {
     return Container(width: 80, height: 80, color: color);
+  }
+
+  Widget _expand({required Widget child}) {
+    return Expanded(child: Center(child: child));
   }
 
   void copyToClipboard(String text) {
